@@ -3,7 +3,7 @@ This is a web-based social network analytics tool, mapping changes on Twitter. (
 
 ## Functionalities
 - Identified and display a network (based on "@", i.e. replies to some one) in a force layout graph using [*D3.js*](https://d3js.org/)
-- Visualize conversations
+- Visualize conversations (Currently working on)
 3. Map changes on account impact/mentioning-rate, sentiment and geolocated spearding over time - thanks to [*Ion.RangeSlider*](https://github.com/IonDen/ion.rangeSlider)
 4. Sentiment analysis of tweets using a Python library [*TextBlob*](https://textblob.readthedocs.org/en/dev/)
 5. Locate the nodes in graph with their geolocation data with the help of [*Leaflet.js*](http://leafletjs.com/)
