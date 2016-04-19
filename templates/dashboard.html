@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% block title %} - Dashboard{% endblock %}
+{% block customCSS %}
+    <link rel="stylesheet" href="../static/css/dashboard.css" >
+    <!-- JQuery plugin - rangeSlider -->
+    <link rel="stylesheet" href="../static/css/ion.rangeSlider.css" />
+    <link rel="stylesheet" href="../static/css/ion.rangeSlider.skinFlat.css" />
+    <!--Languages for Bootstrap 3-->
+    <link rel="stylesheet" href="../static/css/languages.min.css">
+    {{ JSGlue.include() }}
+{% endblock %}
+
+
+{% block content %}
+<div class="row col-lg-12">
+    <div class="map col-lg-12">
+        <div id="force-layout"></div>
+        <div id="time-wrapper">
+                <input type="text" id="range" value="" name="range" />
+        </div>
+    </div>
+</div>
+<div class="sidebars">
+    <div class="sidebar right">
+        <a href="">
+            <span class="glyphicon glyphicon-remove close-sidebar" id="close-right"></span>
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block customJS %}
+<!-- rangeSlider -->
+<script src="../static/js/libs/moment.min.js"></script>
+<script src="../static/js/libs/ion.rangeSlider.min.js"></script>
+<script src="../static/js/dash-time.js"></script>
+
+<!-- d3.js -->
+<script src="../static/js/libs/d3.min.js"></script>
+<script src="../static/js/dash-layout.js"></script>
+
+<!-- right sidebar -->
+<script src="../static/js/dash-wall.js"></script>
+{% endblock %}

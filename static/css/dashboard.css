@@ -1,0 +1,220 @@
+.hamburger.is-open .hamb-top,
+.hamburger.is-open .hamb-middle,
+.hamburger.is-open .hamb-bottom {
+    background-color: #fff;
+}
+
+.hamburger.is-closed .hamb-top,
+.hamburger.is-closed .hamb-middle,
+.hamburger.is-closed .hamb-bottom {
+    background-color: #fff;
+}
+
+#page-content-wrapper {
+    padding: 0;
+}
+body {
+    overflow-y:hidden;
+}
+.container {
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.row {
+    padding: 0;
+    margin: 0;
+    background: #2b2b2b;
+
+}
+
+.map {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    background: #2b2b2b;
+}
+/*.trends {*/
+    /*padding: 0;*/
+    /*margin: 0;*/
+    /*height: 25%;*/
+    /*background: #111;*/
+/*}*/
+/*.wall {*/
+    /*padding: 0;*/
+    /*margin: 0;*/
+    /*height: 100%;*/
+    /*!*background: #ed5565;*!*/
+    /*background: #111;*/
+    /*border-left: solid 1px #000;*/
+/*}*/
+
+
+#force-layout{
+    height: 90%;
+    /*background: #1c1c1c;*/
+}
+
+#time-wrapper{
+    /*position: absolute;*/
+    /*padding-top: 2%;*/
+    /*padding-bottom: 2%;*/
+    height: 10%;
+    /*background: #985f0d;*/
+}
+
+
+.node {
+    cursor: pointer;
+    stroke: #fff;
+    stroke-width: 0.5px;
+}
+
+.link {
+    fill: none;
+    stroke: #bbb;
+    stroke-width: 1px;
+}
+
+path.link {
+    fill: none;
+    stroke: #ppp;
+    stroke-width: 2px;
+}
+
+/* sidebar right */
+
+.sidebar.right {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 300px;
+    background: rgba(0,0,0,0.8);
+    overflow-y: scroll;
+}
+
+.sidebars > .sidebar {
+    /*margin: 0;*/
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.64);
+    position: fixed;
+    color: white;
+    padding: 30px;
+    /*font-size: 1em;*/
+    text-align: center;
+}
+
+.glyphicon-remove {
+    /*float: right;*/
+    position: fixed;
+    top: 3%;
+    right: 3%;
+    margin: -15px;
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 1.8em;
+}
+
+.glyphicon-remove:hover {
+    color: #fff;
+    /*font-size: 1.8em;*/
+}
+
+.added > .panel {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+    text-align: left;
+}
+.sidebar.right > .added > .panel > p {
+    margin: 0;
+}
+.sidebar.right > .added > hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.sidebar.right > .added > .user {
+    /*text-align: center;*/
+    margin: -10px -10px 10px -10px;
+    border-bottom: solid 1px rgba(255, 255, 255, 0.64);
+    color: rgba(255, 255, 255, 0.7);
+}
+.sidebar.right > .added > .user > .user-pic {
+    text-align: center;
+    opacity: 0.7;
+    border-radius: 100px;
+    border: solid 0.5px rgba(255, 255, 255, 0.64);;
+    margin-top: 1px;
+    margin-left: 2px;
+    background: #0e151e;
+    /*float: left;*/
+    display: inline;
+    height: 64px;
+    width: 64px;
+    margin-right: 5px;
+}
+
+.sidebar.right > .added > .user > .user-1 > ul{
+    padding: 0 10px 0 10px;
+    margin: 0;
+    overflow: hidden;
+}
+
+.sidebar.right > .added > .user > .user-1 > ul > li,
+.sidebar.right > .added > .user > .user-2 > ul > li{
+    display: table-cell;
+}
+
+.sidebar.right > .added > .user > .user-1 > ul > li > span{
+    width: 80px;
+    display: block;
+}
+
+.sidebar.right > .added > .user > .user-2 {
+    font-size: 12px;
+    margin: 5px 20px 0 20px;
+    padding: 5px 5px 0 5px;
+    overflow: hidden;
+    border-top: solid 0.5px rgba(255, 255, 255, 0.2);
+    text-align: left;
+}
+
+.sidebar.right > .added > .user > .user-2 > ul{
+    margin: 0;
+    padding: 0;
+}
+
+/*.sidebar.right > .added > .user > .user-2 > ul > li {*/
+    /*width: 120px;*/
+/*}*/
+/*.sidebar.right > .added > .user > .user-2 > ul > li > span > .glyphicon .glyphicon-map-marker{*/
+    /*font-color: #5bc0de;*/
+/*}*/
+
+.status_card {
+    /*position: absolute;*/
+    display: inline;
+    float: left;
+}
+
+.status_card > span {
+    width: 30px;
+    /*display: block;*/
+}
+
+.twitter-icon{
+    width: 20px;
+    height: 20px;
+}
+
+/*.twitter-icon-retweet{*/
+    /*!*background-image: url("twitter-retweet.svg");*!*/
+    /*width: 20px;*/
+    /*height: 20px;*/
+    /*background-color: #5bc0de;*/
+    /*mask: url(twitter-retweet.svg) no-repeat 50% 50%;*/
+/*}*/
+
+/* zoom in and out*/
