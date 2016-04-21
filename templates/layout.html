@@ -58,6 +58,13 @@
                 <a href="{{ url_for('geo') }}">Geo</a>
                 {% endif %}
             </li>
+            <li>
+                {% if request.path == "/chart" %}
+                <a href="#">Chart</a>
+                {% else %}
+                <a href="{{ url_for('chart') }}">Chart</a>
+                {% endif %}
+            </li>
         </ul>
     </nav>
     <!-- /#sidebar-wrapper -->

@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %} - Chart{% endblock %}
+{% block customCSS %}
+    <link href="../static/css/chart.css" rel="stylesheet">
+{% endblock %}
+
+
+{% block content %}
+    <div class="col-lg-10 col-lg-offset-1">
+        <div id="chart-container"></div>
+    </div>
+{% endblock %}
+
+
+{% block customJS %}
+<!--highcharts.js-->
+<script src="https://code.highcharts.com/stock/highstock.js"></script>
+<script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+<script src="../static/js/cover-chart.js"></script>
+{% endblock %}

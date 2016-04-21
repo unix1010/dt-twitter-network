@@ -50,9 +50,9 @@ def dashboard_data_sentiment():
     return json.dumps(data, default=json_util.default)
 
 # future work
-# @app.route("/chart")
-# def chart():
-#     return render_template("chart.html")
+@app.route("/chart")
+def chart():
+    return render_template("chart.html")
 
 # geolocated map
 @app.route("/geo")
