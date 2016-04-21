@@ -1,0 +1,225 @@
+<!--
+
+this is a copy of http://bl.ocks.org/GerHobbelt/3116713 
+, add more comments based my understanding of this algorithm
+     
+-->
+
+<!DOCTYPE html>
+<html>
+
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<head>
+
+        <script src="http://d3js.org/d3.v2.js"></script>
+        <link type="text/css" rel="stylesheet" href="style000.css">
+        <style type="text/css">
+
+circle {
+    stroke: #000;
+    stroke-opacity: .5;
+}
+
+        </style>
+    </head>
+    <body>
+        <div id="body">
+            <div id="footer">
+                Collision Detection
+                <div class="hint">move the mouse to repel nodes</div>
+            </div>
+        </div>
+        <script type="text/javascript">
+var test = 0,
+        test2 = 0;
+var w = 600,
+        h = 800;
+
+// range(n) -> there will be (n-1) nodes (because node 0 has no radius)
+var nodes = d3.range(6).map(function() { return {radius: Math.random() * 12 + 20}; }),
+        color = d3.scale.category10();
+
+var force = d3.layout.force()
+        .gravity(0.05)
+        .charge(function(d, i) { return i ? 0 : -2000; })
+        .nodes(nodes)
+        .size([w, h]);
+
+var root = nodes[0];
+root.radius = 0;
+root.fixed = true;
+
+force.start();
+
+var svg = d3.select("#body").append("svg:svg")
+        .attr("width", w)
+        .attr("height", h);
+
+// a group of node and other elements - in order to display others, like labels
+var gnodes = svg.selectAll("gnode")
+        .data(nodes.slice(1))
+        .enter()
+        .append("g")
+//        .on("mouseover", mouseover)
+//        .on("mouseout", mouseout)
+        .classed('gnode',true);
+// add node in each group
+var node = gnodes
+        .append("svg:circle")
+        .attr("r", function(d) { return d.radius - 2; })
+        .style("fill", function(d, i) { return color(i % 3); })
+        .call(force.drag);
+// add label text into each group
+var labels = gnodes
+        .append("text")
+        .text(function (d) { return d.index; })
+        .attr("font-size", function(d) {return d.radius;} );
+
+// tick function: where simulation is on
+force.on("tick", function(e) {
+    var q = d3.geom.quadtree(nodes),
+            i = 0,
+            n = nodes.length;
+    q.depth = 0;
+    while (++i < n) {
+        if (test == 0){
+            console.log(i + " of "+(n-1));
+        }
+        /* If the callback returns true for a given node
+         * then the children of that node are not visited; otherwise, all child nodes are visited.
+         */
+        q.visit(collide(nodes[i]));
+        /* LIKE: q.visit(function(quad, x1, y1, x2, y2){return ...});
+         *
+         * object{index:190,px:693.9478024869528,py:563.4650149453709,radius:10.23020327805341,weight:0
+         *   ,x:693.9534205005026,y:563.5133105024458}
+         */
+    }
+
+    if (test == 0){
+        test = 1;
+        console.log(test2);
+    }
+
+    // node positioning
+    node.attr("cx", function(d) { return d.x; })
+            .attr("cy", function(d) { return d.y; });
+    // label positioning
+    labels.attr("x", function(d) { return d.x; })
+            .attr("y", function(d) {return d.y; });
+});
+
+
+// avoid collision
+function collide(node) {
+    var r = node.radius + 16,
+    
+    /*
+     * the reason where defining this collide() is to cal the following variables
+     * , which will be used in the callback func
+     * top left:     (nx1, ny1)
+     * bottom right: (nx2, ny2)
+     */
+    nx1 = node.x - r,
+    nx2 = node.x + r,
+    ny1 = node.y - r,
+    ny2 = node.y + r;
+
+    // a callback func where node being visited
+    // and the remaining arguments are the coordinate.
+    return function(quad, x1, y1, x2, y2) {
+        // if there is a point (not null) AND does not collide
+        for (var i=0; i<quad.nodes.length; i++) {
+            if (quad.nodes[i]) {
+                quad.nodes[i].depth = quad.depth+1;
+            }
+        }
+        if (test == 0){
+            //                console.log(node.index);
+            console.log( quad);
+            console.log(quad.depth);
+//                test = 1;
+//            console.log(node.index + "," + quad.point.index);
+//            console.log(quad.point);
+            test2 += 1;
+        }
+
+
+        /* detect collision:
+         * there is a point which is not mine,
+         * */
+        if (quad.point && (quad.point !== node)) {
+
+            var x = node.x - quad.point.x,
+                y = node.y - quad.point.y,
+                l = Math.sqrt(x * x + y * y),   // distance between two centers
+                r = node.radius + quad.point.radius;    // sum of radius
+
+            /* distance < radius sum -> FOUND collision! -> change position to avoid collision*/
+            if (l < r) {
+                if (test == 0) console.log(node.index + " , " + quad.point.index);
+                l = (l - r) / l * .5;
+                node.x -= x *= l;
+                node.y -= y *= l;
+                quad.point.x += x;
+                quad.point.y += y;
+            }
+        }
+
+        /* The quadtree.visit will traverse the tree from the very top four quadrants.
+         * At each quadrant the callback function is called with the current quadrant (object) as first parameter
+         * and the boundaries of that particular quadrant  (x1,y1,x2,y2).
+         * If the (user defined) callback returns true, no sub-quadrants are visited.
+         * If false, the visit function continues to the next level of sub quadrants, etc.
+         * */
+        if (test == 0){
+            console.log(
+//                    "x1 > nx2: " + x1 + " > " + nx2 + " = " + (x1 > nx2) + "\n"
+//                    + "x2 > nx1: " + x2 + " > " + nx1 + " = " + (x2 > nx1) + "\n"
+//                    + "y1 > ny2: " + y1 + " > " + ny2 + " = " + (y1 > ny2) + "\n"
+//                    + "y2 > ny1: " + y2 + " > " + ny1 + " = " + (y2 > ny1) + "\n"
+                    "x1 > nx2: " + (x1 > nx2) + "\n"
+                    + "x2 < nx1: " + (x2 < nx1) + "\n"
+                    + "y1 > ny2: " + (y1 > ny2) + "\n"
+                    + "y2 < ny1: " + (y2 < ny1) + "\n"
+            )
+        }
+
+        /* If return false, the node is in this quad! -> visit the next level;
+         * if return true, out of this quad, visit search next quad.
+         * */
+        return x1 > nx2         // out of RIGHT bound
+                || x2 < nx1     // out of LEFT bound
+                || y1 > ny2     // out of BOTTOM bound
+                || y2 < ny1;    // out of TOP bound
+
+    };
+}
+
+
+
+
+function mouseover(d) {
+    d3.select(this).append("text")
+            .attr("class", "hover")
+            .attr('transform', function(d){
+                return 'translate('+ d.px + ',' + d.py + ')';
+            })
+            .text("hi");
+}
+
+function mouseout(d) {
+    d3.select(this).select("text.hover").remove();
+}
+
+function mousemove(d) {
+    var p1 = d3.svg.mouse(this);
+    root.px = p1[0];
+    root.py = p1[1];
+    force.resume();
+}
+        </script>
+    </body>
+</html>
+
+<!-- This document saved from http://mbostock.github.com/d3/talk/20111018/collision.html -->
