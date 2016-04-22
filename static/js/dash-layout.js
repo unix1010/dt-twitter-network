@@ -9,11 +9,9 @@ var color = d3.scale.category20();
 
 // construct a new "force-directed graph layout"
 var force = d3.layout.force()
-    .charge(0)
     .gravity(0)
-    .linkDistance(30)
-    //.charge(15)
-    //.charge(function (d) {return d.weight * 1})
+    //.linkDistance(30)
+    .charge(function(d, i) { return i ? 0 : -0.5; })
     .size([width, height]);
 
 // initialise svg
@@ -99,7 +97,7 @@ d3.json("/dashboard/data", function(error, graph) {
             .data(graph.nodes)
             .enter()
             .append('g')
-            .on("click", click)
+            //.on("click", click)
             .on("mouseover", mouseover)
             .on("mouseout", mouseout)
             .classed('gnode', true);
@@ -132,29 +130,12 @@ d3.json("/dashboard/data", function(error, graph) {
                 i = 0,
                 n = nodes.length;
 
-            //while (++i < n) q.visit(collide(nodes[i]));
-            //If you use path instead of line, you will need add the boundary check for `attr('d', function () {...});``` a
 
-            // BELOW IS USED TO POSITION CURVE LINKS
-            /*
-                // update link positions
-                link.attr("d", function(d) {
-                    if(
-                        //d[0].first_created_at/1000 > Number($("#range").val())
-                        d[0].first_created_at/1000 > Number($("#range").val())
-                        || d[2].first_created_at/1000 > Number($("#range").val())
-                        || d[3]/1000 > Number($("#range").val())
-                    ) {
-                        //console.log(d[3]/1000 > Number($("#range").val()))
-                        return "";
-                    } else {
+            while (++i < n) {
+                q.visit(collide(nodes[i]));
+            }
 
-                        return "M" + d[0].x + "," + d[0].y
-                            + "S" + d[1].x + "," + d[1].y
-                            + " " + d[2].x + "," + d[2].y;
-                    }
-                });
-            */
+            if (test == 0) test = 1;
 
             // NOW LINKS ARE STRAIGHT
             link.style("display", function(d) {
@@ -339,3 +320,61 @@ function mouseout(d) {
 }
 
 
+
+/* collision detection */
+function collide(node) {
+    node.radius = node.status_num / 20;
+
+    var r = node.radius + 100,
+
+    /*
+     * the reason where defining this collide() is to cal the following variables
+     * , which will be used in the callback func
+     * top left:     (nx1, ny1)
+     * bottom right: (nx2, ny2)
+     */
+        nx1 = node.x - r,
+        nx2 = node.x + r,
+        ny1 = node.y - r,
+        ny2 = node.y + r;
+
+    /* a callback func where node being visited
+     * and the remaining arguments are the coordinate.
+     * */
+    return function(quad, x1, y1, x2, y2) {
+
+        /* detect collision:
+         * there is a point which is not mine, see if we collide
+         * */
+        //if (test == 0) console.log(node);
+        if (quad.point && (quad.point !== node)) {
+            //if (test == 0) console.log(quad.point.id +","+node.id);
+            //if (test == 0) console.log(node.id);
+
+            var x = node.x - quad.point.x,
+                y = node.y - quad.point.y,
+                l = Math.sqrt(x * x + y * y),   // distance between two centers
+                r = node.radius + quad.point.radius;    // sum of radius
+
+            //console.log(nx1 + ", " +nx2 + ", " +ny1 + ", " +ny2 + ", " + "\tl: " + l + ",r: " + r);
+            /* distance < radius sum -> FOUND collision! -> change position to avoid collision*/
+            if (l < r) {
+                //if (test == 0) console.log(node.index + " , " + quad.point.index);
+                l = (l - r) / l * .5;
+                node.x -= x *= l;
+                node.y -= y *= l;
+                quad.point.x += x;
+                quad.point.y += y;
+            }
+        }
+
+        /* If return false, the node is in this quad! -> visit the next level;
+         * if return true, out of this quad, visit search next quad.
+         * */
+        return x1 > nx2         // out of RIGHT bound
+            || x2 < nx1     // out of LEFT bound
+            || y1 > ny2     // out of BOTTOM bound
+            || y2 < ny1;    // out of TOP bound
+
+    };
+}

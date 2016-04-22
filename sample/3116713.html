@@ -29,13 +29,21 @@ circle {
                 <div class="hint">move the mouse to repel nodes</div>
             </div>
         </div>
-        <script type="text/javascript">
+
+
+
+<script type="text/javascript">
+
+
+
+/* test usage */
 var test = 0,
         test2 = 0;
+
 var w = 600,
         h = 800;
 
-// range(n) -> there will be (n-1) nodes (because node 0 has no radius)
+/* range(n) -> there will be (n-1) nodes (because node 0 has no radius) */
 var nodes = d3.range(6).map(function() { return {radius: Math.random() * 12 + 20}; }),
         color = d3.scale.category10();
 
@@ -55,7 +63,7 @@ var svg = d3.select("#body").append("svg:svg")
         .attr("width", w)
         .attr("height", h);
 
-// a group of node and other elements - in order to display others, like labels
+/* a group of node and other elements - in order to display others, like labels */
 var gnodes = svg.selectAll("gnode")
         .data(nodes.slice(1))
         .enter()
@@ -63,19 +71,19 @@ var gnodes = svg.selectAll("gnode")
 //        .on("mouseover", mouseover)
 //        .on("mouseout", mouseout)
         .classed('gnode',true);
-// add node in each group
+/* add node in each group */
 var node = gnodes
         .append("svg:circle")
         .attr("r", function(d) { return d.radius - 2; })
         .style("fill", function(d, i) { return color(i % 3); })
         .call(force.drag);
-// add label text into each group
+/* add label text into each group */
 var labels = gnodes
         .append("text")
         .text(function (d) { return d.index; })
         .attr("font-size", function(d) {return d.radius;} );
 
-// tick function: where simulation is on
+/* tick function: where simulation is on */
 force.on("tick", function(e) {
     var q = d3.geom.quadtree(nodes),
             i = 0,
@@ -110,9 +118,9 @@ force.on("tick", function(e) {
 });
 
 
-// avoid collision
+/* detect collision */
 function collide(node) {
-    var r = node.radius + 16,
+    var r = node.radius + 12+20,
     
     /*
      * the reason where defining this collide() is to cal the following variables
@@ -125,28 +133,29 @@ function collide(node) {
     ny1 = node.y - r,
     ny2 = node.y + r;
 
-    // a callback func where node being visited
-    // and the remaining arguments are the coordinate.
+    /* a callback func where node being visited
+     * and the remaining arguments are the coordinate.
+     * */
     return function(quad, x1, y1, x2, y2) {
-        // if there is a point (not null) AND does not collide
         for (var i=0; i<quad.nodes.length; i++) {
             if (quad.nodes[i]) {
                 quad.nodes[i].depth = quad.depth+1;
             }
         }
-        if (test == 0){
-            //                console.log(node.index);
-            console.log( quad);
-            console.log(quad.depth);
-//                test = 1;
-//            console.log(node.index + "," + quad.point.index);
-//            console.log(quad.point);
-            test2 += 1;
-        }
 
+//        if (test == 0){
+//            //                console.log(node.index);
+//            console.log( quad);
+//            console.log(x1);
+//            console.log(quad.depth);
+////                test = 1;
+////            console.log(node.index + "," + quad.point.index);
+////            console.log(quad.point);
+//            test2 += 1;
+//        }
 
         /* detect collision:
-         * there is a point which is not mine,
+         * there is a point which is not mine, see if we collide
          * */
         if (quad.point && (quad.point !== node)) {
 
@@ -172,18 +181,14 @@ function collide(node) {
          * If the (user defined) callback returns true, no sub-quadrants are visited.
          * If false, the visit function continues to the next level of sub quadrants, etc.
          * */
-        if (test == 0){
-            console.log(
-//                    "x1 > nx2: " + x1 + " > " + nx2 + " = " + (x1 > nx2) + "\n"
-//                    + "x2 > nx1: " + x2 + " > " + nx1 + " = " + (x2 > nx1) + "\n"
-//                    + "y1 > ny2: " + y1 + " > " + ny2 + " = " + (y1 > ny2) + "\n"
-//                    + "y2 > ny1: " + y2 + " > " + ny1 + " = " + (y2 > ny1) + "\n"
-                    "x1 > nx2: " + (x1 > nx2) + "\n"
-                    + "x2 < nx1: " + (x2 < nx1) + "\n"
-                    + "y1 > ny2: " + (y1 > ny2) + "\n"
-                    + "y2 < ny1: " + (y2 < ny1) + "\n"
-            )
-        }
+            /*if (test == 0){
+                console.log(
+                        "x1 > nx2: " + (x1 > nx2) + "\n"
+                        + "x2 < nx1: " + (x2 < nx1) + "\n"
+                        + "y1 > ny2: " + (y1 > ny2) + "\n"
+                        + "y2 < ny1: " + (y2 < ny1) + "\n"
+                )
+            }*/
 
         /* If return false, the node is in this quad! -> visit the next level;
          * if return true, out of this quad, visit search next quad.

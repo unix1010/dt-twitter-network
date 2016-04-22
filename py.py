@@ -25,7 +25,7 @@ def dashboard():
 @app.route("/dashboard/data")
 def dashboard_data():
     # display nodes who posted at least num_min statuses
-    num_min = 10
+    num_min = 15
     # get nodes and links for network graph
     data = get_data.nodes_links(num_min)
     # pprint(data)
@@ -40,7 +40,7 @@ def load_ajax():
             "status_object": 
             json.loads(request.form['status_object'])
         }
-        # pprint(status_wall.get_data(dat1
+        # pprint(status_wall.get_data(data))
         # return str(request.form)
         return json.dumps(status_wall.get_data(data))
 
