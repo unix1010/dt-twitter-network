@@ -29,31 +29,7 @@ $range.ionRangeSlider({
 });
 
 $range.on("change", function () {
+
     $(".sidebar.right").trigger("sidebar:" + "close");
-    updateSentiment();
+
 });
-
-//function changeCellValue(tableId, cellId, val){
-//    $(tableId).find('td#'+cellId).html(20)
-//}
-function updateSentiment(){
-
-    var sentiment_pol = [];
-    var sentiment_sub = [];
-    d3.selectAll(".node").each(function(d){
-        sentiment_pol = sentiment_pol.concat(d.sentiment[0]);
-        sentiment_sub = sentiment_sub.concat(d.sentiment[1]);
-    })
-
-    //console.log($("senti-data-pol").html());
-    $('#control-table').find('td#'+'senti-data-pol').html(mean(sentiment_pol).toFixed(3));
-    $('#control-table').find('td#'+'senti-data-sub').html(mean(sentiment_sub).toFixed(3));
-}
-function mean(array){
-    var total = 0;
-    //var length = array.length;
-    array.forEach(function (i) {
-        total += i;
-    });
-    return total / array.length;
-}

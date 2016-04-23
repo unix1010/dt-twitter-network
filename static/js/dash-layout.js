@@ -10,8 +10,9 @@ var color = d3.scale.category20();
 // construct a new "force-directed graph layout"
 var force = d3.layout.force()
     .gravity(0)
+    //.charge(0)
     //.linkDistance(30)
-    .charge(function(d, i) { return i ? 0 : -0.5; })
+    .charge(function(d, i) { return i ? 0 : -0.00005; })
     .size([width, height]);
 
 // initialise svg
@@ -30,6 +31,8 @@ d3.json("/dashboard/data", function(error, graph) {
         // construct a new map
         var nodeById = d3.map();
 
+        var public_pol = new Array(2),
+            public_sub = new Array(2);
         // *(IMPORTANT STEP for "node by name")
         // copy all "graph.nodes"(array of Objects) from "nodes"(JSON) to the map
         // nodeById: ( key: 1179833635, value: Object { id: "1179833635", value: 10 } )
@@ -135,7 +138,7 @@ d3.json("/dashboard/data", function(error, graph) {
                 q.visit(collide(nodes[i]));
             }
 
-            if (test == 0) test = 1;
+            //if (test == 0) test = 1;
 
             // NOW LINKS ARE STRAIGHT
             link.style("display", function(d) {
@@ -173,42 +176,51 @@ d3.json("/dashboard/data", function(error, graph) {
 
             // change node colour based on sentiment so far
             node.style("fill", function(d) {
-                var polarity_pos = [];
-                var polarity_neg = [];
-                var subjectivity = [];
+                d.sentiment = new Array(2);
+                d.sentiment[0] = [];
+                d.sentiment[1] = [];
+
 
                 d.status_object.forEach(function(obj){
                     if (obj.created_at/1000 <= Number($("#range").val())){
-                        if (obj.sentiment[0] > 0){
-                            polarity_pos.push(obj.sentiment[0]);
-                        } else if(obj.sentiment[0] < 0){
-                            polarity_neg.push(obj.sentiment[0]);
-                        }
-                        subjectivity.push(obj.sentiment[1]);
+                        d.sentiment[0].push(obj.sentiment[0]);
+                        d.sentiment[1].push(obj.sentiment[1]);
                     }
                 });
+                //console.log(public_pol[0]/public_pol[1] +","+public_sub[0]/public_sub[1]);
 
                 // define sentiment colour
-                var total_pos = 0;
-                polarity_pos.forEach(function(i){total_pos += i; });
-                var avg_pos = polarity_pos.length > 0 ? total_pos / polarity_pos.length : 0;
+                var total_pos = new Array(2).fill(0);
+                var total_neg = new Array(2).fill(0);
 
-                var total_neg = 0;
-                polarity_neg.forEach(function(i){total_neg += i; });
-                var avg_neg = polarity_neg.length > 0 ? -1 * total_neg / polarity_neg.length : 0;
-
-                // for test
-                /*
-                    if (test == 0 ){
-                        console.log(Date.now()-timerStart);
-                        test = 1;
+                d.sentiment[0].forEach(function(i){
+                    if (i > 0) {
+                        total_pos[0] += i;
+                        total_pos[1] += 1;
+                    } else if(i < 0) {
+                        total_neg[0] += i;
+                        total_neg[1] += 1;
                     }
-                */
-
+                });
+                var avg_pos = total_pos[1] > 0 ? total_pos[0] / total_pos[1] : 0;
+                var avg_neg = total_neg[1] > 0 ? -1 * total_neg[0] / total_neg[1] : 0;
+                //if (test == 0 ){
+                //console.log(Date.now()-timerStart);
+                //test = 1;
+                //console.log(total_neg[0]);
+                //console.log(avg_neg);
+                    //test = 1;
+                //}
                 return d3.rgb(avg_neg*255,avg_pos*255,65);
 
             });
 
+            if (test == 0 ){
+                //console.log(Date.now()-timerStart);
+                //test = 1;
+                //console.log(node);
+                test = 1;
+            }
 
             // node size grows as time goes by
             node.attr("r", function(d) {

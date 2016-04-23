@@ -25,7 +25,7 @@ def dashboard():
 @app.route("/dashboard/data")
 def dashboard_data():
     # display nodes who posted at least num_min statuses
-    num_min = 15
+    num_min = 20
     # get nodes and links for network graph
     data = get_data.nodes_links(num_min)
     # pprint(data)
