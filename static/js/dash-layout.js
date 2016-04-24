@@ -1,4 +1,5 @@
 // network graph: force layout using D3.js
+var filter_num;
 
 var test = 0;
 // initialise
@@ -23,14 +24,14 @@ var svg = d3.select("#force-layout").append("svg")
 
 d3.json("/dashboard/data", function(error, graph) {
     $(function() {
-
+        filter_num = graph.filter;
+        $('#filter-val').val(filter_num);
         //if (error) throw error;
         var nodes = graph.nodes.slice(),
             links = [],
             bilinks = [];
         // construct a new map
         var nodeById = d3.map();
-        
         // *(IMPORTANT STEP for "node by name")
         // copy all "graph.nodes"(array of Objects) from "nodes"(JSON) to the map
         // nodeById: ( key: 1179833635, value: Object { id: "1179833635", value: 10 } )
@@ -239,6 +240,7 @@ d3.json("/dashboard/data", function(error, graph) {
             */
         });
 
+        //force.on('end', function() { console.log('ended!'); });
 
     });
 
@@ -253,6 +255,7 @@ d3.json("/dashboard/data", function(error, graph) {
     */
 
 });
+
 
 function click(d){
 

@@ -49,6 +49,7 @@ function updateSentiment(){
     $('#control-table').find('td#'+'senti-data-pol').html(mean(sentiment_pol).toFixed(3));
     $('#control-table').find('td#'+'senti-data-sub').html(mean(sentiment_sub).toFixed(3));
 }
+
 function mean(array){
     var total = 0;
     //var length = array.length;

@@ -42,7 +42,7 @@ def nodes_links(status_num_min):
     data = get_nodes(status_num_min)
     nodes = data['data_json']
     links = get_links(data['id_list'])
-    return {"nodes": nodes, "links": links}
+    return {"nodes": nodes, "links": links, "filter": status_num_min}
 
 # main: run this only when "> Python 3 get_data.py", otherwise it won't run
 if __name__ == "__main__":

@@ -22,11 +22,25 @@ def index():
 def dashboard():
     return render_template("dashboard.html")
 
-@app.route("/dashboard/data")
+@app.route("/dashboard/filter", methods=["GET", "POST"])
+def dashboard_filter():
+    global num_min
+    if request.method == "POST":
+        num_min = int(request.form['filter_val'])
+
+    print(num_min)
+    return json.dumps({"num": num_min}, default=json_util.default)
+
+@app.route("/dashboard/data", methods=["GET", "POST"])
 def dashboard_data():
+    global num_min
+    # if request.method == "POST":
+    #     num_min = int(request.form['filter_val'])
+
     # display nodes who posted at least num_min statuses
-    num_min = 20
+    # num_min = 20
     # get nodes and links for network graph
+    print(num_min)
     data = get_data.nodes_links(num_min)
     # pprint(data)
     return json.dumps(data, default=json_util.default)
@@ -72,6 +86,8 @@ def geo_data():
 
 # main: start server at localhost:8888
 if __name__ == "__main__":
+    global num_min
+    num_min = 20
     app.run(host='127.0.0.1',port=8888,debug=True)
 
 
