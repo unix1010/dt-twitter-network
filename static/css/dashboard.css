@@ -87,15 +87,6 @@ path.link {
 
 /* sidebar right */
 
-.sidebar.right {
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 300px;
-    background: rgba(0,0,0,0.8);
-    overflow-y: scroll;
-}
-
 .sidebars > .sidebar {
     /*margin: 0;*/
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.64);
@@ -105,6 +96,28 @@ path.link {
     /*font-size: 1em;*/
     text-align: center;
 }
+
+.sidebar.right {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 300px;
+    background: rgba(0,0,0,0.8);
+    overflow-y: scroll;
+}
+
+.sidebar.top {
+    border-radius: 0px 0px 5px 5px;
+    padding: 10px 10px 10px 20px;
+    position: absolute;
+    box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.64);
+    left: 40%;
+    width: 20%;
+    text-align: center;
+    background: rgba(91, 192, 222,0.8);
+    /*overflow: hidden;*/
+}
+
 
 .glyphicon-remove {
     /*float: right;*/
@@ -241,4 +254,9 @@ path.link {
 }
 .modal {
     z-index: 0;
+}
+
+#control-panel-btn {
+    position: fixed;
+    top: 60px;
 }

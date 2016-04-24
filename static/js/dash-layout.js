@@ -30,9 +30,7 @@ d3.json("/dashboard/data", function(error, graph) {
             bilinks = [];
         // construct a new map
         var nodeById = d3.map();
-
-        var public_pol = new Array(2),
-            public_sub = new Array(2);
+        
         // *(IMPORTANT STEP for "node by name")
         // copy all "graph.nodes"(array of Objects) from "nodes"(JSON) to the map
         // nodeById: ( key: 1179833635, value: Object { id: "1179833635", value: 10 } )
