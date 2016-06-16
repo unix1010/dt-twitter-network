@@ -16,14 +16,20 @@ var force = d3.layout.force()
     .charge(function(d, i) { return i ? 0 : -0.00005; })
     .size([width, height]);
 
-// initialise svg
-var svg = d3.select("#force-layout").append("svg")
-    .attr("width", width)
-    .attr("height", height);
-
 
 d3.json("/dashboard/data", function(error, graph) {
+
     $(function() {
+
+        var zoom = d3.behavior.zoom()
+            .scaleExtent([1, 10])
+            .on("zoom", zoomed);
+// initialise svg
+        var svg = d3.select("#force-layout").append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .call(zoom);
+
         filter_num = graph.filter;
         $('#filter-val').val(filter_num);
         //if (error) throw error;
@@ -87,15 +93,18 @@ d3.json("/dashboard/data", function(error, graph) {
             .style("fill", "grey")
             .attr("d", "M0,-5L10,0L0,5");
 
+
+        var container = svg.append("g");
+
         // create links under svg
-        var link = svg.selectAll(".link")   // select all: class="link"
+        var link = container.selectAll(".link")   // select all: class="link"
             .data(graph.links)
             .enter().append("line")
             .attr("class", "link")   // <line class="link"> </line>
             .attr("marker-end", "url(#end)");
 
         // create the groups (node and label) under svg
-        var gnodes = svg.selectAll('g.gnode')
+        var gnodes = container.selectAll('g.gnode')
             .data(graph.nodes)
             .enter()
             .append('g')
@@ -242,6 +251,10 @@ d3.json("/dashboard/data", function(error, graph) {
 
         //force.on('end', function() { console.log('ended!'); });
 
+        function zoomed() {
+            container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+            //links.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+        }
     });
 
     // FOR TESTING
@@ -253,6 +266,7 @@ d3.json("/dashboard/data", function(error, graph) {
             console.log("Time until everything loaded: ", Date.now()-timerStart);
         });
     */
+
 
 });
 

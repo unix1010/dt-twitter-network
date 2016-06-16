@@ -28,7 +28,7 @@ def dashboard_filter():
     if request.method == "POST":
         num_min = int(request.form['filter_val'])
 
-    print(num_min)
+    # print(num_min)
     return json.dumps({"num": num_min}, default=json_util.default)
 
 @app.route("/dashboard/data", methods=["GET", "POST"])
